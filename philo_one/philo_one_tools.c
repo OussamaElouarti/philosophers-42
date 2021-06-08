@@ -52,3 +52,29 @@ unsigned long long	get_time()
 	mili_sec = (current_time.tv_sec * 1000) + (current_time.tv_usec / 1000);
 	return (mili_sec);
 }
+
+void	display(char *msg, t_phil *philo)
+{
+	unsigned long long time;
+
+	pthread_mutex_lock(&philo->thread->write);
+	time = get_time() - philo->thread->time;
+	printf("%llu philosopher %d ", time, philo->id);
+	printf("%s\n", msg);
+	if (strcmp(msg, "died"))
+		pthread_mutex_unlock(&philo->thread->write);
+}
+
+int str_digit(char *str)
+{
+    int i;
+
+    i = 0;
+    while (str[i])
+    {
+        if (!ft_isdigit(str[i]))
+            return (-1);
+        i++;
+    }
+    return (0);
+}

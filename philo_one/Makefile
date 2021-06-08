@@ -1,6 +1,6 @@
 NAME= philo_one
 CC = gcc
-FLAGS = -Wall -Werror -Wextra
+FLAGS = -Wall -Werror -Wextra -g
 SRCS = *.c
 all: $(NAME)
 $(NAME): $(SRCS)

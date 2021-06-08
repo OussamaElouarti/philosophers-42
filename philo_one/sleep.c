@@ -2,8 +2,11 @@
 
 void    ft_sleep(t_phil *philo)
 {
-    printf("is sleeping id :%d\n" ,philo->id);
+    unsigned long long time;
+    display("is sleeping", philo);
     pthread_mutex_unlock(&philo->thread->forks[philo->lfork]);
     pthread_mutex_unlock(&philo->thread->forks[philo->rfork]);
-    usleep(philo->thread->time_to_sleep);
+    time = get_time();
+    usleep(philo->thread->time_to_sleep * 1000 - 14000);
+    while ((get_time() - time) < (unsigned long long)philo->thread->time_to_sleep);
 }

@@ -6,13 +6,6 @@ void    init_mutex(t_threads *threads)
 
     i = 0;
     threads->forks = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * threads->philo_num);
-    if (threads->forks == NULL)
-    {
-        printf("boooo3\n"); return ;
-    }
-    // pthread_mutex_t* forks;
-    // forks = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * threads->philo_num);
-    // printf("naddiii\n"); exit(0);
     while (i < threads->philo_num)
     {
         pthread_mutex_init(&threads->forks[i], NULL);
@@ -20,15 +13,42 @@ void    init_mutex(t_threads *threads)
     }
 }
 
+void    *supervisor(void *philosopher)
+{
+    t_phil *philo;
+
+    philo = (t_phil *)philosopher;
+    while (1)
+    {
+        pthread_mutex_lock(&philo->eat);
+        if ((get_time() >= ((unsigned long long)philo->thread->time_to_die + philo->last_meal))
+         && philo->is_eating == 0)
+        {
+            display("died", philo);
+            return (NULL);
+        }
+        else if (philo->thread->eat_counter == philo->thread->philo_num)
+        {
+            ft_free(philo->thread);
+            return (NULL);
+        }
+        pthread_mutex_unlock(&philo->eat);
+        usleep(10);
+    }
+    return (NULL);
+}
+
 void    *routine(void *philosopher)
 {
     t_phil *philo;
-    philo = (t_phil *)philosopher;
     pthread_t t_id;
-    philo->last_meal = get_time();
-    pthread_create(&t_id, NULL, &supervisor, &philosopher);
+    philo = (t_phil *)philosopher;
+
+    philo->last_meal = 0;
+    pthread_create(&t_id, NULL, &supervisor, philosopher);
     while (1)
     {
+        
         think(philo);
         eat(philo);
         ft_sleep(philo);
@@ -42,8 +62,13 @@ void    init_threads(t_threads *threads)
     int i;
 
     i = 0;
+    threads->time = get_time();
+    pthread_mutex_init(&threads->write, NULL);
     while  (i < threads->philo_num)
+    {
         pthread_create(&t_id, NULL, &routine,  &threads->philosopher[i++]);
+        usleep(100);
+    }
     while (1);
 }
 
@@ -53,36 +78,19 @@ t_phil    *init_philo(t_threads *threads)
     t_phil *philosopher;
 
     i = 0;
-    philosopher = (t_phil *)malloc(sizeof(t_phil) * threads->philo_num);
-    if (philosopher == NULL)
-    {
-        return NULL;
-    }
+    philosopher = malloc(sizeof(t_phil) * threads->philo_num);
     while (i < threads->philo_num)
     {
         philosopher[i].id = i + 1;
+        pthread_mutex_init(&philosopher[i].eat, NULL);
         philosopher[i].number_of_time_eat = 0;
-        philosopher[i].last_meal = get_time();
-        philosopher[i].lfork = (i + 1) % threads->philo_num;
-        philosopher[i].rfork = i;
+        philosopher[i].is_eating = -1;
+        philosopher[i].rfork = (i + 1) % threads->philo_num;
+        philosopher[i].lfork = i;
         philosopher[i].thread = threads;
         i++;
     }
     return (philosopher);
-}
-
-int str_digit(char *str)
-{
-    int i;
-
-    i = 0;
-    while (str[i])
-    {
-        if (!ft_isdigit(str[i]))
-            return (-1);
-        i++;
-    }
-    return (0);
 }
 
 int   ft_parse(int argc, char **argv, t_threads *threads)
@@ -106,6 +114,7 @@ int   ft_parse(int argc, char **argv, t_threads *threads)
         threads->time_to_die = ft_atoi(argv[2]);
         threads->time_to_sleep = ft_atoi(argv[4]);
         threads->time_to_eat = ft_atoi(argv[3]);
+        threads->eat_counter = 0;
     }
     else
         return (2);
