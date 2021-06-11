@@ -5,7 +5,6 @@ void	*routine(void *philosopher)
 	t_phil	*philo;
 
 	philo = (t_phil *)philosopher;
-	philo->last_meal = get_time();
 	while (1)
 	{
 		think(philo);
@@ -26,6 +25,7 @@ void	init_threads(t_threads *threads)
 	pthread_mutex_init(&threads->write, NULL);
 	while (i < threads->philo_num)
 	{
+		threads->philosopher[i].last_meal = get_time();
 		pthread_create(&t_id, NULL, &routine, &threads->philosopher[i++]);
 		usleep(100);
 	}
@@ -42,6 +42,7 @@ t_phil	*init_philo(t_threads *threads)
 	{
 		philosopher[i].id = i + 1;
 		philosopher[i].number_of_time_eat = 0;
+		pthread_mutex_init(&philosopher[i].eat, NULL);
 		philosopher[i].is_eating = 0;
 		philosopher[i].rfork = (i + 1) % threads->philo_num;
 		philosopher[i].lfork = i;

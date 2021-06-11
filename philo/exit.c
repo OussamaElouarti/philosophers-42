@@ -27,7 +27,9 @@ int	supervisor(t_threads *threads)
 						+ threads->philosopher[i].last_meal))
 				&& threads->philosopher[i].is_eating == 0)
 			{
+				pthread_mutex_lock(&threads->philosopher[i].eat);
 				display("died", &threads->philosopher[i]);
+				pthread_mutex_unlock(&threads->philosopher[i].eat);
 				ft_free(threads);
 				return (1);
 			}

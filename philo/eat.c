@@ -6,6 +6,7 @@ void	eat(t_phil *philo)
 	display("taking lfork", philo);
 	pthread_mutex_lock(&philo->thread->forks[philo->rfork]);
 	display("taking rfork", philo);
+	pthread_mutex_lock(&philo->eat);
 	display("start eating", philo);
 	philo->last_meal = get_time();
 	philo->is_eating = 1;
@@ -15,5 +16,6 @@ void	eat(t_phil *philo)
 	usleep(philo->thread->time_to_eat * 1000 - 14000);
 	while ((get_time() - philo->last_meal)
 		< (unsigned long long)philo->thread->time_to_eat);
+	pthread_mutex_unlock(&philo->eat);
 	philo->is_eating = 0;
 }
