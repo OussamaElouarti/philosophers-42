@@ -1,4 +1,4 @@
-NAME= philo_one
+NAME= philo_bonus
 CC = gcc
 FLAGS = -Wall -Werror -Wextra -g
 SRCS = *.c

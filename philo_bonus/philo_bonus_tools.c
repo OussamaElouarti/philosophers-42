@@ -1,4 +1,4 @@
-# include "philo_one.h"
+#include "philo_bonus.h"
 
 int	ft_check(unsigned long pt, int s)
 {
@@ -43,10 +43,10 @@ int	ft_isdigit(int c)
 	return (0);
 }
 
-unsigned long long	get_time()
+unsigned long long	get_time(void)
 {
-	unsigned long long mili_sec;
-	struct timeval current_time;
+	unsigned long long	mili_sec;
+	struct timeval		current_time;
 
 	gettimeofday(&current_time, NULL);
 	mili_sec = (current_time.tv_sec * 1000) + (current_time.tv_usec / 1000);
@@ -55,7 +55,7 @@ unsigned long long	get_time()
 
 void	display(char *msg, t_phil *philo)
 {
-	unsigned long long time;
+	unsigned long long	time;
 
 	pthread_mutex_lock(&philo->thread->write);
 	time = get_time() - philo->thread->time;
@@ -63,18 +63,4 @@ void	display(char *msg, t_phil *philo)
 	printf("%s\n", msg);
 	if (strcmp(msg, "died"))
 		pthread_mutex_unlock(&philo->thread->write);
-}
-
-int str_digit(char *str)
-{
-    int i;
-
-    i = 0;
-    while (str[i])
-    {
-        if (!ft_isdigit(str[i]))
-            return (-1);
-        i++;
-    }
-    return (0);
 }
