@@ -8,17 +8,15 @@
 # include <string.h>
 # include <stdlib.h>
 # include <sys/time.h>
+# include <signal.h>
 
 typedef struct s_phil
 {
 	int					id;
     int                 pid;
 	unsigned long long	last_meal;
-	int					lfork;
-	int					rfork;
 	int					number_of_time_eat;
 	int					is_eating;
-	pthread_mutex_t		eat;
 	struct s_threads	*thread;
 }				t_phil;
 
@@ -31,7 +29,8 @@ typedef struct s_threads
 	int					time_to_eat;
 	int					number_of_time_to_eat;
 	int					eat_counter;
-	pthread_mutex_t		write;
+	sem_t				*write;
+	sem_t				*eat;
 	struct s_phil		*philosopher;
 	sem_t		         *forks;
 }				t_threads;
@@ -45,7 +44,6 @@ void				think(t_phil *philo);
 void				display(char *msg, t_phil *philo);
 int					str_digit(char *str);
 void				ft_free(t_threads *threads);
-int					supervisor(t_threads *threads);
-void				init_mutex(t_threads *threads);
+void				*supervisor(void *philosopher);
 
 #endif

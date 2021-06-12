@@ -1,4 +1,4 @@
-#include "philo_one.h"
+#include "philo_bonus.h"
 
 void	ft_free(t_threads *threads)
 {
@@ -7,37 +7,36 @@ void	ft_free(t_threads *threads)
 	i = 0;
 	if (threads)
 	{
-		while (i < threads->philo_num)
-			pthread_mutex_destroy(&threads->forks[i++]);
-		free(threads->forks);
-		pthread_mutex_destroy(&threads->write);
+		sem_post(threads->write);
+		sem_close(threads->forks);
+		sem_close(threads->eat);
+		sem_close(threads->write);
 	}
 }
 
-int	supervisor(t_threads *threads)
+void	*supervisor(void *philosopher)
 {
-	int	i;
+	t_phil *philo;
 
+	philo = (t_phil *)philosopher;
 	while (1)
 	{
-		i = -1;
-		while (++i < threads->philo_num)
+		if ((get_time() >= ((unsigned long long)philo->thread->time_to_die
+					+ philo->last_meal))
+			&& philo->is_eating == 0)
 		{
-			if ((get_time() >= ((unsigned long long)threads->time_to_die
-						+ threads->philosopher[i].last_meal))
-				&& threads->philosopher[i].is_eating == 0)
-			{
-				display("died", &threads->philosopher[i]);
-				ft_free(threads);
-				return (1);
-			}
-			else if (threads->eat_counter == threads->philo_num)
-			{
-				ft_free(threads);
-				return (1);
-			}
+			// sem_wait(philo->thread->eat);
+			display("died", philo);
+			// sem_post(philo->thread->eat);
+			//ft_free(philo->thread);
+			exit(1);
+		}
+		else if (philo->thread->eat_counter == philo->thread->philo_num)
+		{
+			//ft_free(philo->thread);
+			exit(1);
 		}
 		usleep(100);
 	}
-	return (0);
+	return (NULL);
 }

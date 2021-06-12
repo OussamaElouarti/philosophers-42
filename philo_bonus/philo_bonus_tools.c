@@ -57,10 +57,10 @@ void	display(char *msg, t_phil *philo)
 {
 	unsigned long long	time;
 
-	pthread_mutex_lock(&philo->thread->write);
+	sem_wait(philo->thread->write);
 	time = get_time() - philo->thread->time;
 	printf("%llu philosopher %d ", time, philo->id);
 	printf("%s\n", msg);
 	if (strcmp(msg, "died"))
-		pthread_mutex_unlock(&philo->thread->write);
+		sem_post(philo->thread->write);
 }

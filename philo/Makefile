@@ -1,6 +1,6 @@
 NAME= philo
 CC = gcc
-FLAGS = -pthread -Wall -Werror -Wextra -g
+FLAGS = -Wall -Werror -Wextra -g
 SRCS = main.c eat.c exit.c philo_one_tools.c sleep.c think.c
 all: $(NAME)
 $(NAME): $(SRCS)
