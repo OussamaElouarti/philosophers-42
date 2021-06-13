@@ -1,6 +1,6 @@
 NAME= philo_bonus
 CC = gcc
-FLAGS = -Wall -Werror -Wextra -g
+FLAGS = -g
 SRCS = *.c
 all: $(NAME)
 $(NAME): $(SRCS)

@@ -1,5 +1,5 @@
-#ifndef PHILO_TWO_H
-# define PHILO_TWO_H
+#ifndef PHILO_BONUS_H
+# define PHILO_BONUS_H
 
 # include <pthread.h>
 # include <unistd.h>
@@ -8,12 +8,13 @@
 # include <string.h>
 # include <stdlib.h>
 # include <sys/time.h>
+# include <sys/wait.h>
 # include <signal.h>
 
 typedef struct s_phil
 {
 	int					id;
-    int                 pid;
+	int					pid;
 	unsigned long long	last_meal;
 	int					number_of_time_eat;
 	int					is_eating;
@@ -27,12 +28,12 @@ typedef struct s_threads
 	int					time_to_die;
 	int					time_to_sleep;
 	int					time_to_eat;
-	int					number_of_time_to_eat;
 	int					eat_counter;
+	int					number_of_time_to_eat;
 	sem_t				*write;
 	sem_t				*eat;
 	struct s_phil		*philosopher;
-	sem_t		         *forks;
+	sem_t				*forks;
 }				t_threads;
 
 int					ft_atoi(const char *str);
@@ -45,5 +46,10 @@ void				display(char *msg, t_phil *philo);
 int					str_digit(char *str);
 void				ft_free(t_threads *threads);
 void				*supervisor(void *philosopher);
+void				ft_putchar_fd(char c, int fd);
+static void			ft_print_number(int nb, int fd);
+void				ft_putnbr_fd(int nb, int fd);
+void				ft_putstr_fd(char *s, int fd);
+void				ft_kill(t_threads *threads);
 
 #endif

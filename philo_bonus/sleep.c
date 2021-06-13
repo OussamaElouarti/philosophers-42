@@ -3,7 +3,7 @@
 void	ft_sleep(t_phil *philo)
 {
 	unsigned long long	time;
-	
+
 	sem_post(philo->thread->forks);
 	sem_post(philo->thread->forks);
 	display("is sleeping", philo);

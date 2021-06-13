@@ -3,7 +3,7 @@
 void	ft_sleep(t_phil *philo)
 {
 	unsigned long long	time;
-	
+
 	pthread_mutex_unlock(&philo->thread->forks[philo->lfork]);
 	pthread_mutex_unlock(&philo->thread->forks[philo->rfork]);
 	display("is sleeping", philo);

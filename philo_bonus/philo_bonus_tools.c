@@ -59,8 +59,12 @@ void	display(char *msg, t_phil *philo)
 
 	sem_wait(philo->thread->write);
 	time = get_time() - philo->thread->time;
-	printf("%llu philosopher %d ", time, philo->id);
-	printf("%s\n", msg);
+	ft_putnbr_fd(time, 1);
+	ft_putstr_fd(" philosopher ", 1);
+	ft_putnbr_fd(philo->id, 1);
+	write (1, " ", 1);
+	ft_putstr_fd(msg, 1);
+	write (1, "\n", 1);
 	if (strcmp(msg, "died"))
 		sem_post(philo->thread->write);
 }

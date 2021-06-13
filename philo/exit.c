@@ -14,7 +14,7 @@ void	ft_free(t_threads *threads)
 	}
 }
 
-int	supervisor(t_threads *threads)
+void	supervisor(t_threads *threads)
 {
 	int	i;
 
@@ -31,17 +31,16 @@ int	supervisor(t_threads *threads)
 				display("died", &threads->philosopher[i]);
 				pthread_mutex_unlock(&threads->philosopher[i].eat);
 				ft_free(threads);
-				return (1);
+				return ;
 			}
 			else if (threads->eat_counter == threads->philo_num)
 			{
 				ft_free(threads);
-				return (1);
+				return ;
 			}
 		}
 		usleep(100);
 	}
-	return (0);
 }
 
 void	init_mutex(t_threads *threads)

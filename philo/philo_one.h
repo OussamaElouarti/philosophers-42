@@ -27,8 +27,8 @@ typedef struct s_threads
 	int					time_to_die;
 	int					time_to_sleep;
 	int					time_to_eat;
-	int					number_of_time_to_eat;
 	int					eat_counter;
+	int					number_of_time_to_eat;
 	pthread_mutex_t		write;
 	struct s_phil		*philosopher;
 	pthread_mutex_t		*forks;
@@ -43,7 +43,7 @@ void				think(t_phil *philo);
 void				display(char *msg, t_phil *philo);
 int					str_digit(char *str);
 void				ft_free(t_threads *threads);
-int					supervisor(t_threads *threads);
+void				supervisor(t_threads *threads);
 void				init_mutex(t_threads *threads);
 
 #endif
