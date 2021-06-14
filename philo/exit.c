@@ -56,3 +56,17 @@ void	init_mutex(t_threads *threads)
 		i++;
 	}
 }
+
+int	ft_strncmp(const char *str1, const char *str2, size_t n)
+{
+	while (n--)
+	{
+		if (*str1 == '\0' && *str2 == '\0')
+			return (0);
+		if (*str1 != *str2)
+			return ((unsigned char)*str1 - (unsigned char)*str2);
+		str1++;
+		str2++;
+	}
+	return (0);
+}

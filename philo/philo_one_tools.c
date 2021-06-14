@@ -61,6 +61,6 @@ void	display(char *msg, t_phil *philo)
 	time = get_time() - philo->thread->time;
 	printf("%llu philosopher %d ", time, philo->id);
 	printf("%s\n", msg);
-	if (strcmp(msg, "died"))
+	if (ft_strncmp(msg, "died", 5))
 		pthread_mutex_unlock(&philo->thread->write);
 }

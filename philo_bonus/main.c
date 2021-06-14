@@ -3,16 +3,13 @@
 void	*routine(t_phil *philosopher)
 {
 	philosopher->last_meal = get_time();
-	while (philosopher->number_of_time_eat
-		< philosopher->thread->number_of_time_to_eat
-		|| philosopher->thread->number_of_time_to_eat == -1)
+	while (1)
 	{
 		think(philosopher);
 		eat(philosopher);
 		ft_sleep(philosopher);
 		usleep(100);
 	}
-	philosopher->last_meal = -3;
 	return (NULL);
 }
 
@@ -24,15 +21,14 @@ void	init_threads(t_threads *threads)
 	int			status;
 
 	i = -1;
+	if (threads->number_of_time_to_eat > 0)
+		pthread_create(&p_t, NULL, &eat_count, (void *)threads);
 	threads->time = get_time();
 	while (++i < threads->philo_num)
 	{
 		threads->philosopher[i].pid = fork();
 		if (threads->philosopher[i].pid < 0)
-		{
-			write(2, "fork failled!\n", 14);
 			exit(1);
-		}
 		else if (threads->philosopher[i].pid == 0)
 		{
 			pthread_create(&p_t, NULL, &supervisor, &threads->philosopher[i]);
@@ -57,6 +53,8 @@ t_phil	*init_philo(t_threads *threads)
 		philosopher[i].number_of_time_eat = 0;
 		philosopher[i].is_eating = 0;
 		philosopher[i].thread = threads;
+		sem_unlink("EatSem");
+		philosopher[i].eat_m = sem_open("EatSem", O_CREAT, 0644, 0);
 		i++;
 	}
 	return (philosopher);
@@ -83,7 +81,6 @@ int	ft_parse(int argc, char **argv, t_threads *threads)
 		threads->time_to_die = ft_atoi(argv[2]);
 		threads->time_to_sleep = ft_atoi(argv[4]);
 		threads->time_to_eat = ft_atoi(argv[3]);
-		threads->eat_counter = 0;
 	}
 	else
 		return (2);
@@ -100,6 +97,8 @@ int	main(int argc, char **argv)
 		write(2, "Not valid args!\n", 15);
 		return (1);
 	}
+	if (threads.philo_num == 0)
+		return (1);
 	sem_unlink("forks");
 	threads.forks = sem_open("forks", O_CREAT, 0644, threads.philo_num);
 	sem_unlink("writesem");

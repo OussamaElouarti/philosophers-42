@@ -65,6 +65,6 @@ void	display(char *msg, t_phil *philo)
 	write (1, " ", 1);
 	ft_putstr_fd(msg, 1);
 	write (1, "\n", 1);
-	if (strcmp(msg, "died"))
+	if (ft_strncmp(msg, "died", 5))
 		sem_post(philo->thread->write);
 }

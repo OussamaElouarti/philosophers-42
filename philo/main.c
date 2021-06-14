@@ -90,6 +90,8 @@ int	main(int argc, char **argv)
 		write(2, "Not valid args!\n", 15);
 		return (1);
 	}
+	if (threads.philo_num == 0)
+		return (1);
 	init_mutex(&threads);
 	init_threads(&threads);
 	supervisor(&threads);

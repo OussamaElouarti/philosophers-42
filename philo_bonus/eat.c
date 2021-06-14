@@ -14,6 +14,7 @@ void	eat(t_phil *philo)
 	usleep(philo->thread->time_to_eat * 1000 - 14000);
 	while ((get_time() - philo->last_meal)
 		< (unsigned long long)philo->thread->time_to_eat);
+	sem_post(philo->eat_m);
 	sem_post(philo->thread->eat);
 	philo->is_eating = 0;
 }

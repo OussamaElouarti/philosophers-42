@@ -45,5 +45,5 @@ int					str_digit(char *str);
 void				ft_free(t_threads *threads);
 void				supervisor(t_threads *threads);
 void				init_mutex(t_threads *threads);
-
+int					ft_strncmp(const char *str1, const char *str2, size_t n);
 #endif

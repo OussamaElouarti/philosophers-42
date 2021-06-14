@@ -18,6 +18,8 @@ typedef struct s_phil
 	unsigned long long	last_meal;
 	int					number_of_time_eat;
 	int					is_eating;
+
+	sem_t				*eat_m;
 	struct s_threads	*thread;
 }				t_phil;
 
@@ -28,7 +30,6 @@ typedef struct s_threads
 	int					time_to_die;
 	int					time_to_sleep;
 	int					time_to_eat;
-	int					eat_counter;
 	int					number_of_time_to_eat;
 	sem_t				*write;
 	sem_t				*eat;
@@ -51,5 +52,7 @@ static void			ft_print_number(int nb, int fd);
 void				ft_putnbr_fd(int nb, int fd);
 void				ft_putstr_fd(char *s, int fd);
 void				ft_kill(t_threads *threads);
+void				*eat_count(void	*thread_);
+int					ft_strncmp(const char *str1, const char *str2, size_t n);
 
 #endif

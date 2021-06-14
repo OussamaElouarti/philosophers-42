@@ -1,17 +1,42 @@
 #include "philo_bonus.h"
 
-void	ft_free(t_threads *threads)
+int	ft_strncmp(const char *str1, const char *str2, size_t n)
 {
-	int	i;
-
-	i = 0;
-	if (threads)
+	while (n--)
 	{
-		sem_post(threads->write);
-		sem_close(threads->forks);
-		sem_close(threads->eat);
-		sem_close(threads->write);
+		if (*str1 == '\0' && *str2 == '\0')
+			return (0);
+		if (*str1 != *str2)
+			return ((unsigned char)*str1 - (unsigned char)*str2);
+		str1++;
+		str2++;
 	}
+	return (0);
+}
+
+void	*eat_count(void	*thread_)
+{
+	t_threads	*threads;
+	int			total;
+	int			i;
+
+	total = 0;
+	threads = (t_threads *)thread_;
+	while (total < threads->number_of_time_to_eat)
+	{
+		i = 0;
+		while (i < threads->philo_num)
+		{
+			sem_wait(threads->philosopher[i].eat_m);
+			i++;
+		}
+		total++;
+	}
+	sem_wait(threads->write);
+	i = -1;
+	while (++i < threads->philo_num)
+		kill(threads->philosopher[i].pid, SIGKILL);
+	return (NULL);
 }
 
 void	*supervisor(void *philosopher)
@@ -27,13 +52,6 @@ void	*supervisor(void *philosopher)
 		{
 			display("died", philo);
 			exit(1);
-		}
-		else if (philo->number_of_time_eat
-			== philo->thread->number_of_time_to_eat)
-		{
-			while (philo->last_meal >= 0)
-				;
-			exit(2);
 		}
 		usleep(100);
 	}
