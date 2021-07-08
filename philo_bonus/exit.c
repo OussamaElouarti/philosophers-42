@@ -68,17 +68,12 @@ void	ft_kill(t_threads *threads)
 	while (++i < threads->philo_num)
 	{
 		waitpid(-1, &status, 0);
-		if (WIFEXITED(status) && WEXITSTATUS(status) == 2)
-			continue ;
-		else if (WIFEXITED(status) && WEXITSTATUS(status) == 1)
+		if (WIFEXITED(status) && WEXITSTATUS(status) == 1)
 		{
 			j = -1;
 			while (++j < threads->philo_num)
 				kill(threads->philosopher[j].pid, SIGKILL);
 		}
 	}
-	j = -1;
-	while (++j < threads->philo_num)
-		kill(threads->philosopher[j].pid, SIGKILL);
 	exit(0);
 }
